@@ -1,6 +1,7 @@
 '''
 V1 to improve on the previous one in the following ways:
-[] We will take data from a pdf file and chunk it into sentences
+[X] Create a markdown file from a pdf
+[] Chunk the markdown file into sentences
 [] We will embed the sentences using a pre-trained model
 [] We will store the embeddings in a database
 [] We will embed the user query and perform vector search
@@ -9,8 +10,7 @@ V1 to improve on the previous one in the following ways:
 
 Looming Questions:
 PDF Chunking:
-  - Is it possible to extract text from the pdf into markdown?
-  - If not, is there another way to preserve the formatting of the text?
+  - Is it possible to extract text from the pdf into markdown? YES!
   - If the pdf has a table of contents, is it possible to extract and use for text
   - How large should the chunks be? Should we chunk by sentence or paragraph?
 
@@ -26,21 +26,6 @@ import pathlib as pl # for path manipulation
 # non-standard libraries
 import pymupdf as pym # PyMuPDF for pdf extraction
 import pymupdf4llm as pmll # for markdown extraction
-
-# # loading pdf
-# def load_pdf(pdf_path):
-#   pdf = pym.open(pdf_path)
-#   return pdf
-
-# # convert pdf to markdown
-# def convert_pdf_to_markdown(pdf):
-#   markdown = pmll.convert(pdf)
-#   return markdown
-
-# # save markdown to file
-# def save_markdown(markdown, file_path):
-#   with open(file_path, 'w') as file:
-#     file.write(markdown)
 
 pdf = pym.open('./AsyncJS.pdf')
 markdown = pmll.to_markdown(pdf)

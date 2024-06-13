@@ -4,6 +4,11 @@ is most similar to the query by chunking both the query and the documents into w
 and then calculating the jaccard similarity between the two.
 '''
 
+# SBERT sentence embedding model from https://sbert.net/
+# installed w/pip: `pip install -U sentence-transformers`
+# note: had to run VSCode as administrator to get install to work
+from sentence_transformers import SentenceTransformer
+
 meditations = [
     "Reflect each day on the brevity of life. Remember that you are mortal, and let this realization sharpen your focus and humility in all your endeavors.",
     "Consider the nature of things. All that exists does so for a reason, and in understanding this, you find peace and acceptance of the universe's order.",
@@ -40,18 +45,39 @@ def return_response(query, corpus):
     similarity = jaccard_similarity(query, doc)
     similarities.append(similarity)
   
-  
   return meditations[similarities.index(max(similarities))]
 
-keep_going = True
+# pretrained Sentence Transformer model copied from exmple found at:
+# https://sbert.net/docs/quickstart.html#sentence-transformer
+model = SentenceTransformer("all-MiniLM-L6-v2")
 
-while keep_going:
-  user_query = input('What topic do you want your meditation to be?')
-  best_match = return_response(user_query, meditations)
-  print(best_match)
-  keep_going = False
-  again = input('Would you like to go again?(y/n)')
-  keep_going = True if again == 'y' else False
+# seeing what happens when you model.encode a whole array of sentences
+def sbert_encode_all_sentences(sentences):
+  print('embedding an array of sentences:')
+  embeddings = model.encode(sentences)
+  print('embeddings', embeddings)
+  print('embedding shape', embeddings.shape)
+
+# seeing what happens when you model.encode just one sentence string
+def sbert_encode_individual_sentence(sentence):
+  print('embedding just one sentence:')
+  embeddings = model.encode(sentence)
+  print('embeddings', embeddings)
+  print('embedding shape', embeddings.shape)
+
+sbert_encode_all_sentences(meditations)
+sbert_encode_individual_sentence(meditations[0])
+
+
+# keep_going = True
+
+# while keep_going:
+#   user_query = input('What topic do you want your meditation to be?')
+#   best_match = return_response(user_query, meditations)
+#   print(best_match)
+#   keep_going = False
+#   again = input('Would you like to go again?(y/n)')
+#   keep_going = True if again == 'y' else False
 
 
 '''

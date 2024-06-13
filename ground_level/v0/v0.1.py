@@ -2,9 +2,18 @@
 Here we will implement a simple search engine that will return a meditation that
 is most similar to the query by:
 
-    chunking both the query and the documents into words
-    and then calculating the jaccard similarity between the two.
+    using SBERT's default embedding modelo.
 '''
+
+# SBERT sentence embedding model from https://sbert.net/
+# installed w/pip: `pip install -U sentence-transformers`
+# note: had to run VSCode as administrator to get install to work
+from sentence_transformers import SentenceTransformer
+
+# pretrained Sentence Transformer model copied from exmple found at:
+# https://sbert.net/docs/quickstart.html#sentence-transformer
+model = SentenceTransformer("all-MiniLM-L6-v2")
+
 
 meditations = [
     "Reflect each day on the brevity of life. Remember that you are mortal, and let this realization sharpen your focus and humility in all your endeavors.",
@@ -29,40 +38,47 @@ meditations = [
     "Accept that some things are beyond your control. Focus on what you can change, and let go of the rest. This is the essence of inner tranquility and wisdom."
 ]
 
-def jaccard_similarity(query, document):
-  query = query.lower().split(' ')
-  document = document.lower().split(' ')
-  intersection = set(query).intersection(set(document))
-  union = set(query).union(set(document))
-  return len(intersection)/len(union)
+# gets similarity tensor from query sentence + 'document' sentence
+def sbert_embed_similarity(query, document_sentence):
+  query_embed = model.encode(query)
+  doc_embed = model.encode(document_sentence)
+  tensor = model.similarity(query_embed, doc_embed)
+  # print('tensor type', type(tensor)) # <class 'torch.Tensor'> (https://pytorch.org/docs/stable/torch.html)
+  # print('tensor value', tensor.item()) # apparently `.item()` returns the inner value of a torch.Tensor (only if tensor has one value)
+  return tensor
 
-def return_response(query, corpus):
+def top_results(query, document_sentences):
   similarities = []
-  for doc in corpus:
-    similarity = jaccard_similarity(query, doc)
-    similarities.append(similarity)
-  
-  return meditations[similarities.index(max(similarities))]
+  for sentence in document_sentences:
+    tensor = sbert_embed_similarity(query, sentence)
+    tensor_value = tensor.item() # again, only works if tensor has only 1 value, will need to better understand this moving forward
+    similarities.append([
+      tensor_value,
+      sentence
+    ])
 
+  def firstElem(arr):
+    return arr[0]
+  
+  similarities.sort(key=firstElem, reverse=True)
+  return similarities
+
+def display_results(query, document_sentences):
+  results = top_results(query, document_sentences)
+  # print('Query: ', query, '\n')
+  for i in range(1, 4):
+    rounded_similarity = round(results[i][0], 2)
+    print(f'Result #{i} - Similarity [{rounded_similarity}]: ', results[i][1])
+
+
+# print(top_results('what even is going on', meditations))
 
 keep_going = True
 
 while keep_going:
-  user_query = input('What topic do you want your meditation to be?')
-  best_match = return_response(user_query, meditations)
-  print(best_match)
-  keep_going = False
-  again = input('Would you like to go again?(y/n)')
+  user_query = input('What topic do you want your meditation to be? ')
+  display_results(user_query, meditations)
+  # keep_going = False
+  again = input('Would you like to go again? (y/n) ')
   keep_going = True if again == 'y' else False
 
-
-'''
-The trouble with this is that if the input prompt and the related strings have no
-common words, then there is no similarity and the first meditation will be returned
-Another issue is that the token invovled is a whole word and one word may have a 
-variety of meaning. Here when I type "nature" looking for qoutes related to the natural world, 
-I get a qoute about the nature of things. more about the characteristics. 
-
-You could also query "Anything but nature" 
-This is another issue of semantics
-'''

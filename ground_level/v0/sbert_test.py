@@ -1,7 +1,6 @@
 '''
-Here we will implement a simple search engine that will return a meditation that
-is most similar to the query by chunking both the query and the documents into words
-and then calculating the jaccard similarity between the two.
+Standalone test of SBERT sentence embedding (https://sbert.net/), simply run the file
+
 '''
 
 # SBERT sentence embedding model from https://sbert.net/

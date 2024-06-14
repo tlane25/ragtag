@@ -1,13 +1,19 @@
 '''
 Here we will implement a simple search engine that will return advice that
-is most similar to the query by:
+is most similar to the query by using SBERT's default embedding model.
 
-    using SBERT's default embedding model.
 
-example good request: when should i confide in my friend
-example bad request: my toupee keeps sliding off and i can never find it once it hits the ground
+this is the 'retrieval' step of RAG. 
+we start with a list of documents, in this case pieces of advice from very different contexts
+we're keeping it simple so our "documents" is an array of sentence strings and each sentence is a "document"
+takes a sentence and turns it into an array (embedment/embedding/vector, idrk the right term) using `model.embed`
+this embedment is more or less used to sort it by context (determined also by AI under the hood of `model.embed`)
+compares the embedments to determine how similar they are (using `model.similarity`)
+sorts the sentences based on how similar they are to the question posed by the user (query)
+
 
 got a little carried away with the fluff stuff; this is just basic proof of concept for embedding
+
 '''
 
 # SBERT sentence embedding model from https://sbert.net/
@@ -74,11 +80,12 @@ advice_list = [
 
 # gets similarity tensor from query sentence + 'document' sentence
 def sbert_embed_similarity_score(query, document_sentence):
-  query_embed = model.encode(query)
-  doc_embed = model.encode(document_sentence)
-  tensor = model.similarity(query_embed, doc_embed) # `type(tensor))` => <class 'torch.Tensor'> (https://pytorch.org/docs/stable/torch.html)
+  query_embed = model.encode(query) # [[12, 13, 13, ...]]
+  doc_embed = model.encode(document_sentence) # [[12, 13, 13, ...]]
+  tensor = model.similarity(query_embed, doc_embed) # tensor[[.034]] # `type(tensor))` => <class 'torch.Tensor'> (https://pytorch.org/docs/stable/torch.html)
   return tensor.item() # apparently `.item()` returns the inner value of a torch.Tensor (only if tensor has one value)
 
+# sorts the sentences by similarity_score
 def sorted_results(query, document_sentences):
   # using `document_sentences`
   #   [ 'sentence 1...', 'sentence 2...', etc. ] 
@@ -159,4 +166,3 @@ while True:
   user_query = input('What topic do you want advice on? ')
   display_results(user_query, advice_list)
   
-

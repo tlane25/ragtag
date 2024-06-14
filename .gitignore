@@ -1,3 +1,4 @@
 *.pdf
 AsyncJS.md
 env/
+openai-env/

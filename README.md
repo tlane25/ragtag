@@ -1,5 +1,6 @@
 Welcome!
 
+<<<<<<< HEAD
 __Research Questions__
 What type of files should we focus on?
 How should we best chunk according to file size?
@@ -20,3 +21,6 @@ config details of RAG may be varied enough over a wide array of documents (chunk
 
 Embedding models have an upper limit, maybe could use that upper limit as a "max" chunk size, then provide goldilocks options for chunk size/ overlap/ embedding model. (maybe RAGaaS is feasible )
 
+=======
+see notes in the v0/v1 folders
+>>>>>>> refs/remotes/origin/main

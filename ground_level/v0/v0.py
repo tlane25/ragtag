@@ -1,7 +1,9 @@
 '''
 Here we will implement a simple search engine that will return a meditation that
-is most similar to the query by chunking both the query and the documents into words
-and then calculating the jaccard similarity between the two.
+is most similar to the query by:
+
+    chunking both the query and the documents into words
+    and then calculating the jaccard similarity between the two.
 '''
 
 meditations = [
@@ -40,8 +42,8 @@ def return_response(query, corpus):
     similarity = jaccard_similarity(query, doc)
     similarities.append(similarity)
   
-  
   return meditations[similarities.index(max(similarities))]
+
 
 keep_going = True
 

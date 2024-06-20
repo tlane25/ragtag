@@ -28,6 +28,16 @@ To link uploading with back-end:
 Install FastAPI
 `pip install fastapi`
 
+Uninstall/ install numpy
+`pip uninstall numpy`
+`pip install numpy==1.26.4`
+
+Install spaCy
+`pip install spacy`
+
+Install pymupdf(there maybe a better library)
+`pip install pymupdf`
+
 Run (from `/back`)
 `fastapi dev main.py`
 

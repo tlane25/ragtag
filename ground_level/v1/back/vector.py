@@ -2,8 +2,11 @@ from pymilvus import MilvusClient
 from pymilvus import model
 from pymilvus import connections
 
-# connections.disconnect("vector.db")
-client = MilvusClient("vector.db")
+try:
+  client = MilvusClient("vector.db")
+except:
+  connections.disconnect("vector.db")
+  client = MilvusClient("vector.db")
 
 # This should delete the collection upon each backend server restart. 
 # We will want to change this to preserve our embeddings
@@ -63,14 +66,15 @@ def text_from_single_query_result(result):
 
 # for skateboard, it may be wise to limit the queries down to one sentence
 # though we can likely test how longer sentences do
-async def process_query(query, limit=3):
+async def process_query(query, num_results=5):
     client = MilvusClient("vector.db")
     query_vector = embedding_fn.encode_queries(query)
 
     result = client.search(
         collection_name="demo_collection",
         data=query_vector,
-        limit=limit,
+        # filter=
+        limit=num_results,
         output_fields=["text"]
     )
 

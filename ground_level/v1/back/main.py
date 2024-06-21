@@ -7,9 +7,6 @@ import process
 import vector as vdb
 from process_prompt import process_prompt
 
-
-
-
 app = FastAPI()
 
 

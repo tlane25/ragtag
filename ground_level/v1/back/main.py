@@ -43,6 +43,6 @@ async def post_query(query: UserQuery):
         'query': 'what colour is the sky?',
         'matches': ['the sky is blue', 'sunsets are sometimes glorious hues of orange and red', 'as the sun rises shades of pink and orange are sometimes visible against the clouds']
     }
-    process_prompt(test_context)
-    return query.query
+    response = process_prompt(test_context)
+    return { "type": "response", "body": response }
 

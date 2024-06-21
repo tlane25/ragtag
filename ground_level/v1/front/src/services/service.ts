@@ -7,7 +7,7 @@ const uploadSuccessSchema = z.object({
 
 const messageSchema = z
   .object({
-    id: z.number(),
+    // id: z.number(),
     type: z.string(),
     body: z.string(),
   })
@@ -29,5 +29,6 @@ export async function sendQuery(query: string) {
     data: { query },
   });
 
-  return messageSchema.parse(result);
+  console.log(result.data)
+  return messageSchema.parse(result.data);
 }

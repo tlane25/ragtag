@@ -16,20 +16,21 @@ export default function ChatContainer() {
     const target = e.target as HTMLInputElement;
     setMessageInput(target.value);
   }
+
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([
+    { type: "query", body: "i have some questions about a document..." },
     {
       type: "response",
-      body: "this is your answer based on the documents",
+      body: "great, just upload it and ask away!",
     },
-    { type: "query", body: "i had a question about this topic" },
   ]);
   return (
     <div className="chat-container">
       <div className="messages-container">
-        {messages.map((message: Message) => {
+        {messages.map((message: Message, i: number) => {
           return (
-            <div key={message.body} className={message.type + "-container"}>
+            <div key={i} className={message.type + "-container"}>
               <p className={message.type + " message"}>{message.body}</p>
             </div>
           );

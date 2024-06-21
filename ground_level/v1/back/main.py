@@ -26,7 +26,9 @@ app.add_middleware(
 
 @app.post("/api/upload")
 async def process_file(file: UploadFile = File(...)):
+    print("processing file...")
     sentences = await process.pdf(file)
+    print("file processed. embedding and inserting into db...")
     result = vdb.embed_and_insert(sentences)
     return {"message": f"{result['insert_count']} entries added to database"}
 
@@ -35,16 +37,10 @@ class UserQuery(BaseModel):
 
 @app.post("/api/query")
 async def post_query(query: UserQuery):
-    print(query)
-    matches = vdb.process_query(query)
-
-    # test context to check if rest of code works
-    # test_context = {
-    #     'query': 'what colour is the sky?',
-    #     'matches': ['the sky is blue', 'sunsets are sometimes glorious hues of orange and red', 'as the sun rises shades of pink and orange are sometimes visible against the clouds']
-    # }
-    # response = process_prompt(test_context)
-    response = "okidokie"
+    print('user query: ', query)
+    matches = await vdb.process_query(query)
+    print('matches: ', matches)
+    response = await process_prompt(query, matches)
     return { "type": "response", "body": response }
 
 

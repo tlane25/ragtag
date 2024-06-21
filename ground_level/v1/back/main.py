@@ -2,9 +2,11 @@ from fastapi import FastAPI, File, UploadFile
 from pydantic import BaseModel
 # cors middleware tutorial https://fastapi.tiangolo.com/tutorial/cors/
 from fastapi.middleware.cors import CORSMiddleware
+
 import process
 from process_prompt import process_prompt
 from process_query import process_query
+
 
 app = FastAPI()
 
@@ -20,12 +22,12 @@ app.add_middleware(
 )
 
 
-
 @app.post("/api/upload")
 async def process_file(file: UploadFile = File(...)):
     sentences = await process.pdf(file)
     print(sentences[30])
     return {"filename": file.filename}
+
 
 
 class UserQuery(BaseModel):
@@ -45,4 +47,5 @@ async def post_query(query: UserQuery):
     }
     response = process_prompt(test_context)
     return { "type": "response", "body": response }
+
 

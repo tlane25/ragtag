@@ -1,7 +1,7 @@
 import { useState } from "react";
 import * as service from "../services/service";
 
-export function UploadForm() {
+export default function UploadForm() {
   const [file, setFile] = useState<File | null>(null);
 
   function handleChange(e: React.FormEvent<HTMLInputElement>) {
@@ -24,7 +24,13 @@ export function UploadForm() {
     <form action="" onSubmit={handleSubmit}>
       <h2>Upload a Document</h2>
       <label htmlFor="document">Document</label>
-      <input required type="file" name="document" onChange={handleChange} />
+      <input
+        required
+        type="file"
+        name="document"
+        id="document"
+        onChange={handleChange}
+      />
       <button type="submit">Upload</button>
     </form>
   );

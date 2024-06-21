@@ -40,3 +40,35 @@
 .read-the-docs {
   color: #888;
 }
+
+.messages-container {
+  background-color: lightsteelblue;
+  height: 600px;
+}
+
+.query-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.response-container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.message {
+  border-radius: 8px;
+  margin: 8px 16px;
+  display: inline-block;
+  padding: 8px 16px;
+}
+
+.query {
+  background-color: darkblue;
+  color: white;
+}
+
+.response {
+  background-color: white;
+  color: black;
+}

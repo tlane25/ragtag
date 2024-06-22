@@ -3,6 +3,7 @@ from pymilvus import model
 from pymilvus import connections
 
 try:
+  print(connections)
   client = MilvusClient("vector.db")
 except:
   connections.disconnect("vector.db")
@@ -11,14 +12,15 @@ except:
 # This should delete the collection upon each backend server restart. 
 # We will want to change this to preserve our embeddings
 # over time. 
-if not client.has_collection(collection_name="demo_collection"):
-  client.create_collection(
-      collection_name="demo_collection",
-      # I assume tweeking the dimensionality of vectors is variable we'll need to 
-      # tweek. I expect it's effects reach chunksize, embedding model, similarity search accuracy
-      # and speed 
-      dimension=768,
-  )
+if client.has_collection(collection_name="demo_collection"):
+  client.drop_collection(collection_name="demo_collection")
+client.create_collection(
+    collection_name="demo_collection",
+    # I assume tweeking the dimensionality of vectors is variable we'll need to 
+    # tweek. I expect it's effects reach chunksize, embedding model, similarity search accuracy
+    # and speed 
+    dimension=768,
+)
 
 # many embedding models to choose from with milvus
 # https://milvus.io/docs/embeddings.md

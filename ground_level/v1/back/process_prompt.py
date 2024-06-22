@@ -12,14 +12,15 @@ load_dotenv()
 
 async def process_prompt(query, context):
     messages = create_messages(query, context)
-    response = send_prompt(messages)
-    return response
-
+    if len(context) == 0:
+      return "There are no parts of the document that match your query. Have you uploaded a pdf yet?"
+    else:
+      return send_prompt(messages)
 
 def create_messages(query, context):
     return [
         {"role": "system", "content": "You are tasked with utilizing provided context to answer a user's question with a scholarly response."},
-        {"role": "system", "content": "Please never one-word introductory clauses."},
+        {"role": "system", "content": "Please never use one-word introductory clauses."},
         # {"role": "system", "content": f'Do not use any sources of information outside of this context: {context}'},
         {"role": "system", "content": f'The content you will be using to answer questions is {context}'},
         {"role": "user", "content": f'Extrapolate on but only use the given information to answer this question: {query}'}
